@@ -403,3 +403,317 @@
 
 
 
+
+
+// // // Banker's Algorithm Implementation
+// #include <iostream>
+// #include <vector>
+// using namespace std;
+// int main() {
+//     int n, m;
+//     cout << "Enter number of processes: ";
+//     cin >> n;
+//     cout << "Enter number of resource types: ";
+//     cin >> m;
+//     vector<vector<int>> alloc(n, vector<int>(m));
+//     vector<vector<int>> max(n, vector<int>(m));
+//     vector<vector<int>> need(n, vector<int>(m));
+//     vector<int> avail(m);
+//     cout << "Enter Allocation Matrix:\n";
+//     for(int i = 0; i < n; i++) {
+//         for(int j = 0; j < m; j++) {
+//             cin >> alloc[i][j];
+//         }
+//     }
+//     cout << "Enter Max Matrix:\n";
+//     for(int i = 0; i < n; i++) {
+//         for(int j = 0; j < m; j++) {
+//             cin >> max[i][j];
+//         }
+//     }
+//     cout << "Enter Available Resources:\n";
+//     for(int j = 0; j < m; j++) {
+//         cin >> avail[j];
+//     }
+//     for(int i = 0; i < n; i++) {
+//         for(int j = 0; j < m; j++) {
+//             need[i][j] = max[i][j] - alloc[i][j];
+//         }
+//     }
+//     vector<int> f(n, 0);
+//     vector<int> ans;
+//     int ind = 0;
+//     for (int k = 0; k < n; k++) {
+//         for (int i = 0; i < n; i++) {
+//             if (f[i] == 0) {
+//                 int flag = 0;
+//                 for (int j = 0; j < m; j++) {
+//                     if (need[i][j] > avail[j]){
+//                         flag = 1; 
+//                         break;
+//                     }
+//                 }
+//                 if (flag == 0) {
+//                     ans.push_back(i);
+//                     for (int y = 0; y < m; y++)
+//                         avail[y] += alloc[i][y];
+//                     f[i] = 1;
+//                 }
+//             }
+//         }
+//     }
+//     int flag = 1;
+//     for(int i = 0; i < n; i++) {
+//         if(f[i] == 0) {
+//             flag = 0;
+//             cout << "\nThe system is NOT Safe (Deadlock Possible)";
+//             break;
+//         }
+//     }
+//     if(flag == 1) {
+//         cout << "\nFollowing is the Safe Sequence: \n";
+//         for (int i = 0; i < n - 1; i++)
+//             cout << "P" << ans[i] + 1 << " -> ";
+//         cout << "P" << ans[n - 1] + 1 << endl;
+//     }
+//     return 0;
+// }
+
+// // Process,Allocation (A B C),Max (A B C)
+// // 5 3
+// // P1, 0 1 0, 7 5 3
+// // P2, 2 0 0, 3 2 2
+// // P3, 3 0 2, 9 0 2
+// // P4, 2 1 1, 2 2 2
+// // P5, 0 0 2, 4 3 3
+// // 3 3 2
+
+
+
+
+
+
+// // // FIFO Page Replacement Algorithm Implementation
+// #include <iostream>
+// #include <vector>
+// using namespace std;
+// bool isPagePresent(vector<int>& frames, int page) {
+//     for(int i = 0; i < frames.size(); i++) {
+//         if(frames[i] == page)
+//             return true;
+//     }
+//     return false;
+// }
+// void printFrames(vector<int>& frames) {
+//     for(int i = 0; i < frames.size(); i++) {
+//         if(frames[i] == -1) 
+//             cout << "- ";
+//         else 
+//             cout << frames[i] << " ";
+//     }
+//     cout << endl;
+// }
+// int main() {
+//     int n, f_count;
+//     cout << "Enter number of pages in reference string: ";
+//     cin >> n;
+//     cout << "Enter number of frames: ";
+//     cin >> f_count;
+//     vector<int> pages(n);
+//     cout << "Enter the reference string (space separated): ";
+//     for(int i = 0; i < n; i++) {
+//         cin >> pages[i];
+//     }
+//     vector<int> frames(f_count, -1);
+//     int pageFaults = 0;
+//     int k = 0;
+//     cout << "\nRef\tFrames Status\t\tStatus\n";
+//     cout << "----------------------------------------\n";
+//     for(int i = 0; i < n; i++) {
+//         cout << pages[i] << "\t";
+//         if(isPagePresent(frames, pages[i])) {
+//             printFrames(frames);
+//         } 
+//         else {
+//             frames[k] = pages[i];
+//             k = (k + 1) % f_count;
+//             pageFaults++;
+//             printFrames(frames);
+//         }
+//     }
+//     cout << "\n----------------------------------------\n";
+//     cout << "Total Page Faults: " << pageFaults << endl;
+//     cout << "Total Page Hits: " << n - pageFaults << endl;
+//     return 0;
+// }
+
+// // 8
+// // 3
+// // 7 0 1 2 0 3 0 4 
+ 
+
+
+
+
+
+// // // LRU Page Replacement Algorithm Implementation
+// #include <iostream>
+// #include <vector>
+// #include <algorithm>
+// using namespace std;
+
+// int main() {
+//     int n, f_count;
+//     cout << "Enter number of pages: ";
+//     cin >> n;
+//     cout << "Enter number of frames: ";
+//     cin >> f_count;
+//     vector<int> pages(n);
+//     cout << "Enter reference string: ";
+//     for(int i = 0; i < n; i++) {
+//         cin >> pages[i];
+//     }
+//     vector<int> frames(f_count, -1);
+//     vector<int> time(f_count, -1);
+//     int pageFaults = 0;
+//     cout << "\nRef\tFrames Status\t\tStatus\n";
+//     cout << "----------------------------------------\n";
+//     for(int i = 0; i < n; i++) {
+//         bool hit = false;
+//         for(int j = 0; j < f_count; j++) {
+//             if(frames[j] == pages[i]) {
+//                 hit = true;
+//                 time[j] = i;
+//                 break;
+//             }
+//         }
+//         if(!hit) {
+//             bool foundEmpty = false;
+//             for(int j = 0; j < f_count; j++) {
+//                 if(frames[j] == -1) {
+//                     frames[j] = pages[i];
+//                     time[j] = i;
+//                     foundEmpty = true;
+//                     pageFaults++;
+//                     break;
+//                 }
+//             }
+//             if(!foundEmpty) {
+//                 int lru_idx = 0;
+//                 int min_time = 99999;
+//                 for(int j = 0; j < f_count; j++) {
+//                     if(time[j] < min_time) {
+//                         min_time = time[j];
+//                         lru_idx = j;
+//                     }
+//                 }
+//                 frames[lru_idx] = pages[i];
+//                 time[lru_idx] = i;
+//                 pageFaults++;
+//             }
+//         }
+//         cout << pages[i] << "\t";
+//         for(int j = 0; j < f_count; j++) {
+//             if(frames[j] == -1) cout << "- ";
+//             else cout << frames[j] << " ";
+//         }
+//         if(hit) cout << "\tHIT";
+//         else cout << "\tMISS";
+//         cout << endl;
+//     }
+//     cout << "\n----------------------------------------\n";
+//     cout << "Total Page Faults: " << pageFaults << endl;
+//     cout << "Total Page Hits: " << n - pageFaults << endl;
+//     return 0;
+// }
+
+// // 8
+// // 3
+// // 7 0 1 2 0 3 0 4 
+
+
+
+
+
+
+// // // MRU Page Replacement Algorithm Implementation
+// #include <iostream>
+// #include <vector>
+// using namespace std;
+
+// int main() {
+//     int n, f_count;
+//     cout << "Enter number of pages: ";
+//     cin >> n;
+//     cout << "Enter number of frames: ";
+//     cin >> f_count;
+//     vector<int> pages(n);
+//     cout << "Enter reference string: ";
+//     for(int i = 0; i < n; i++) {
+//         cin >> pages[i];
+//     }
+//     vector<int> frames(f_count, -1);
+//     vector<int> time(f_count, -1);
+//     int pageFaults = 0;
+//     cout << "\nRef\tFrames Status\t\tStatus\n";
+//     cout << "----------------------------------------\n";
+//     for(int i = 0; i < n; i++) {
+//         bool hit = false;
+//         for(int j = 0; j < f_count; j++) {
+//             if(frames[j] == pages[i]) {
+//                 hit = true;
+//                 time[j] = i;
+//                 break;
+//             }
+//         }
+//         if(!hit) {
+//             bool foundEmpty = false;
+//             for(int j = 0; j < f_count; j++) {
+//                 if(frames[j] == -1) {
+//                     frames[j] = pages[i];
+//                     time[j] = i; 
+//                     foundEmpty = true;
+//                     pageFaults++;
+//                     break;
+//                 }
+//             }
+//             if(!foundEmpty) {
+//                 int mru_idx = 0;
+//                 int max_time = -1; 
+//                 for(int j = 0; j < f_count; j++) {
+//                     if(time[j] > max_time) {
+//                         max_time = time[j];
+//                         mru_idx = j;
+//                     }
+//                 }
+//                 frames[mru_idx] = pages[i];
+//                 time[mru_idx] = i;
+//                 pageFaults++;
+//             }
+//         }
+//         cout << pages[i] << "\t";
+//         for(int j = 0; j < f_count; j++) {
+//             if(frames[j] == -1) cout << "- ";
+//             else cout << frames[j] << " ";
+//         }
+//         if(hit) cout << "\tHIT";
+//         else cout << "\tMISS";
+//         cout << endl;
+//     }
+//     cout << "\n----------------------------------------\n";
+//     cout << "Total Page Faults: " << pageFaults << endl;
+//     cout << "Total Page Hits: " << n - pageFaults << endl;
+//     return 0;
+// }
+
+
+// // 8
+// // 3
+// // 7 0 1 2 0 3 0 4 
+
+
+
+
+
+
+// // //
