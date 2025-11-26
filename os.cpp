@@ -716,4 +716,75 @@
 
 
 
-// // //
+// // // Optimal Page Replacement Algorithm Implementation
+// #include <iostream>
+// #include <vector>
+// using namespace std;
+// bool search(int key, vector<int>& frames) {
+//     for (int i = 0; i < frames.size(); i++)
+//         if (frames[i] == key)
+//             return true;
+//     return false;
+// }
+// int predict(vector<int>& pages, vector<int>& frames, int n, int index) {
+//     int res = -1, farthest = index;
+//     for (int i = 0; i < frames.size(); i++) {
+//         int j;
+//         for (j = index; j < n; j++) {
+//             if (frames[i] == pages[j]) {
+//                 if (j > farthest) {
+//                     farthest = j;
+//                     res = i;
+//                 }
+//                 break;
+//             }
+//         }
+//         if (j == n)
+//             return i;
+//     }
+//     return (res == -1) ? 0 : res;
+// }
+// int main() {
+//     int n, f_count;
+//     cout << "Enter number of pages: ";
+//     cin >> n;
+//     cout << "Enter number of frames: ";
+//     cin >> f_count;
+//     vector<int> pages(n);
+//     cout << "Enter reference string: ";
+//     for(int i = 0; i < n; i++) {
+//         cin >> pages[i];
+//     }
+//     vector<int> frames; 
+//     int pageFaults = 0;
+//     cout << "\nRef\tFrames Status\t\tStatus\n";
+//     cout << "----------------------------------------\n";
+//     for (int i = 0; i < n; i++) {
+//         cout << pages[i] << "\t";
+//         if (search(pages[i], frames)) {
+//             for(int x : frames) cout << x << " ";
+//             for(int k=frames.size(); k<f_count; k++) cout << "- ";
+//             cout << "\tHIT" << endl;
+//             continue;
+//         }
+//         pageFaults++;
+//         if (frames.size() < f_count) {
+//             frames.push_back(pages[i]);
+//         }
+//         else {
+//             int j = predict(pages, frames, n, i + 1);
+//             frames[j] = pages[i];
+//         }
+//         for(int x : frames) cout << x << " ";
+//         for(int k=frames.size(); k<f_count; k++) cout << "- ";
+//         cout << "\tMISS" << endl;
+//     }
+//     cout << "\n----------------------------------------\n";
+//     cout << "Total Page Faults: " << pageFaults << endl;
+//     cout << "Total Page Hits: " << n - pageFaults << endl;
+//     return 0;
+// }
+
+// // 8
+// // 3
+// // 7 0 1 2 0 3 0 4 
